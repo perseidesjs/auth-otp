@@ -152,8 +152,11 @@ Upon successful verification, you'll receive a JWT token that can be used for su
 
 ## Roadmap
 
-- [ ] Expose a workflow that will generate auth identities for all actor types, allowing to use the OTP provider as a secondary authentication method out of the box.
-- [ ] Emit an event when a user requests an OTP code, allowing the developers to use a Notification module to send the OTP code to the user.
+- [ ] Create a built-in workflow to automatically set up auth identities for different user types, enabling OTP as a secondary authentication method by default
+- [ ] Implement an event system that triggers when users request OTP codes, making it easy to integrate with notification systems for delivering codes to users
+- [ ] Add configuration option to control behavior when user identity is not found:
+  - Option to return an error response
+  - Option to return a success message (with server-side warning logs)
 
 ## License
 
