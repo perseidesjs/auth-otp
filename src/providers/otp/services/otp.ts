@@ -4,6 +4,7 @@ import { createHmac, randomBytes } from 'node:crypto'
 
 type InjectedDependencies = {
   [Modules.CACHE]: ICacheService
+  [Modules.EVENT_BUS]: IEventBusModuleService
   [ContainerRegistrationKeys.LOGGER]: Logger
 }
 
@@ -22,6 +23,7 @@ class OTPAuthProviderService extends AbstractAuthModuleProvider {
   protected cacheService_: ICacheService
   protected logger_: Logger
   protected options_: ProviderOptions
+  protected eventBus_: IEventBusModuleService
 
   constructor(container: InjectedDependencies, options: ProviderOptions = {
     digits: 6,
@@ -30,6 +32,7 @@ class OTPAuthProviderService extends AbstractAuthModuleProvider {
     super()
     this.cacheService_ = container[Modules.CACHE]
     this.logger_ = container[ContainerRegistrationKeys.LOGGER]
+    this.eventBus_ = container[Modules.EVENT_BUS]
     this.options_ = options
   }
 
