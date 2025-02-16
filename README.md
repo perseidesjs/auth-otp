@@ -26,7 +26,7 @@
 </p>
 
 > [!WARNING]
-> This package is currently in alpha. Features may change without notice. Feel free to submit feature requests and bug reports through [GitHub Issues](https://github.com/perseidesjs/auth-otp/issues).
+> This package is currently in alpha and NOT READY for use yet. Features may change without notice. Feel free to submit feature requests and bug reports through [GitHub Issues](https://github.com/perseidesjs/auth-otp/issues).
 
 <p align="center">
   <img src="./.github/preview.gif" alt="Preview of @perseidesjs/auth-otp in action">
@@ -41,20 +41,14 @@
 
 ## Prerequisites
 
-- Medusa Server (v2.x)
-- Node.js (v16 or later)
-- Redis (for OTP storage)
+- Medusa.js (v2.x)
+- Node.js (v20 or later)
+- Cache module (Redis for production)
 
 ## Installation
 
-1. Install the package using your preferred package manager:
-
 ```bash
-npm install @perseidesjs/auth-otp
-# or
 yarn add @perseidesjs/auth-otp
-# or
-pnpm add @perseidesjs/auth-otp
 ```
 
 2. Add the OTP provider to your Medusa configuration (`medusa-config.js`):
@@ -68,6 +62,7 @@ module.exports = {
       resolve: "@medusajs/medusa/auth",
       options: {
         providers: [
+          // ... other providers (or you can use otp only)
           {
             resolve: "@perseidesjs/auth-otp/providers/otp",
             id: "otp",
@@ -100,6 +95,65 @@ The OTP provider can be configured with the following options:
   }
 }
 ```
+
+## Usage
+
+The OTP provider implements a two-step authentication flow:
+
+### 1. Registration
+
+To register a new auth identity and generate an OTP secret key:
+
+```http
+POST http://localhost:9000/auth/{actor_type}/otp/register
+Content-Type: application/json
+
+{
+    "identifier": "user@example.com"
+}
+```
+
+This will create a new auth identity and generate an OTP secret key that will be used for future authentications.
+
+### 2. Authentication
+
+The authentication process is done in two steps for security:
+
+#### Step 1: Request OTP
+
+```http
+POST http://localhost:9000/auth/{actor_type}/otp/authenticate
+Content-Type: application/json
+
+{
+    "identifier": "user@example.com"
+}
+```
+
+> [!NOTE]
+> For security reasons, this endpoint always returns a success message, regardless of whether the identifier exists or not. However, if no matching identity is found, a warning will be logged in the server console.
+
+#### Step 2: Verify OTP
+
+Once you receive the OTP (which is valid for the configured TTL), submit it:
+
+```http
+POST http://localhost:9000/auth/{actor_type}/otp/authenticate
+Content-Type: application/json
+
+{
+    "identifier": "user@example.com",
+    "otp": "123456"
+}
+```
+
+Upon successful verification, you'll receive a JWT token that can be used for subsequent authenticated requests following the standard Medusa authentication flow.
+
+
+## Roadmap
+
+- [ ] Expose a workflow that will generate auth identities for all actor types, allowing to use the OTP provider as a secondary authentication method out of the box.
+- [ ] Emit an event when a user requests an OTP code, allowing the developers to use a Notification module to send the OTP code to the user.
 
 ## License
 
