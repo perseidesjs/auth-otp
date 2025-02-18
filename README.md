@@ -157,6 +157,7 @@ Upon successful verification, you'll receive a JWT token that can be used for su
 - [ ] Add configuration option to control behavior when user identity is not found:
   - Option to return an error response
   - Option to return a success message (with server-side warning logs)
+- [ ] Create a new API route to generate an OTP
 
 ## License
 
