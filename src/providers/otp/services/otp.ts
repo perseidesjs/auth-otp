@@ -16,21 +16,24 @@ type ProviderOptions = {
 
 export const OTP_RETURN_KEY = "otp_generated"
 
-class OTPAuthProviderService extends AbstractAuthModuleProvider {
+export class OtpAuthProviderService extends AbstractAuthModuleProvider {
   static identifier = "otp"
 
   protected cacheService_: ICacheService
   protected logger_: Logger
   protected options_: ProviderOptions
 
-  constructor(container: InjectedDependencies, options: ProviderOptions = {
-    digits: 6,
-    ttl: 60 * 5
-  }) {
+  constructor(container: InjectedDependencies, options: ProviderOptions) {
     super()
     this.cacheService_ = container[Modules.CACHE]
     this.logger_ = container[ContainerRegistrationKeys.LOGGER]
-    this.options_ = options
+
+    const DEFAULT_OPTIONS: ProviderOptions = {
+      digits: 6,
+      ttl: 60 * 5
+    }
+
+    this.options_ = options || DEFAULT_OPTIONS
   }
 
   /**
@@ -201,4 +204,4 @@ class OTPAuthProviderService extends AbstractAuthModuleProvider {
   }
 }
 
-export default OTPAuthProviderService
+export default OtpAuthProviderService

@@ -39,6 +39,9 @@ describe("OTPAuthProviderService", () => {
     service = new OTPAuthProviderService({
       [Modules.CACHE]: mockCacheService,
       [ContainerRegistrationKeys.LOGGER]: mockLogger,
+    }, {
+      digits: 6,
+      ttl: 60 * 5
     })
   })
 
