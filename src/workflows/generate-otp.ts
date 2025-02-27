@@ -8,18 +8,18 @@ import { isDefined } from "@medusajs/framework/utils"
 
 const generateOtpWorkflow = createWorkflow(
   "generate-otp",
-  function (input: { identifier: string, actorType: string, actorOptions: Required<OtpOptions>['actorsOptions'][string] }) {
+  function (input: { identifier: string, actorType: string, accessorsPerActor: Required<OtpOptions>['accessorsPerActor'][string] }) {
     const actorResult = getActorStep({
       identifier: input.identifier,
       actorType: input.actorType,
-      actorOptions: input.actorOptions
+      accessorsPerActor: input.accessorsPerActor
     })
 
 
     const authIdentityResult = when(actorResult, ({ actor }) => isDefined(actor) && isDefined(actor.data) && actor.data.length > 0).then(() => getAuthIdentityStep({
       identifier: input.identifier,
       actorType: input.actorType,
-      actorOptions: input.actorOptions,
+      accessorsPerActor: input.accessorsPerActor,
       foundActor: actorResult.actor.data[0]
     }))
 

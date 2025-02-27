@@ -8,17 +8,11 @@ export const getAuthIdentityStep = createStep(
     identifier: string,
     actorType?: string,
     foundActor?: Record<string, unknown>
-    actorOptions?: Required<OtpOptions>['actorsOptions'][string]
+    accessorsPerActor?: Required<OtpOptions>['accessorsPerActor'][string]
   }, { container }) => {
     const authModule = container.resolve(Modules.AUTH)
-    const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
-    logger.info(`Getting auth identity for identifier: ${input.identifier}`)
-    logger.info(`Actor type: ${input.actorType}`)
-    logger.info(`Found actor: ${JSON.stringify(input.foundActor)}`)
-    logger.info(`Actor options: ${JSON.stringify(input.actorOptions)}`)
 
-    const entityId = input.foundActor?.[input.actorOptions?.entityIdAccessor!] as string
-    logger.info(`Entity ID: ${entityId}`)
+    const entityId = input.foundActor?.[input.accessorsPerActor?.entityIdAccessor!] as string
 
     const authIdentities = await authModule.listAuthIdentities({
       provider_identities: {
@@ -32,9 +26,6 @@ export const getAuthIdentityStep = createStep(
     if (authIdentities.length === 0) {
       throw new Error("Auth identity not found")
     }
-
-    logger.info(`Auth identities: ${JSON.stringify(authIdentities)}`)
-
 
     const authIdentity = authIdentities.find(identity =>
       isDefined(identity.app_metadata) &&

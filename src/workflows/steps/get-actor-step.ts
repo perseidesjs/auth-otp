@@ -7,7 +7,7 @@ export const getActorStep = createStep(
   async (input: {
     identifier: string
     actorType: string
-    actorOptions: Required<OtpOptions>['actorsOptions'][string]
+    accessorsPerActor: Required<OtpOptions>['accessorsPerActor'][string]
   }, { container }) => {
     const remoteQuery = container.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
 
@@ -15,7 +15,7 @@ export const getActorStep = createStep(
       entity: input.actorType,
       fields: ['*'],
       filters: {
-        [input.actorOptions.accessor]: input.identifier
+        [input.accessorsPerActor.accessor]: input.identifier
       }
     })
 

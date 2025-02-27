@@ -23,7 +23,7 @@ export const POST = async (
       identifier,
       otp,
       actorType,
-      actorOptions: pluginOptions.actorsOptions![actorType]
+      accessorsPerActor: pluginOptions.accessorsPerActor![actorType]
     }
   })
 
