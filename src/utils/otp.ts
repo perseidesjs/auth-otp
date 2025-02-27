@@ -8,7 +8,11 @@ export class OtpUtils {
   static DEFAULT_OPTIONS: OtpOptions = {
     digits: 6, // 6 digits
     ttl: 60 * 5, // 5 minutes
-    mode: 'main'
+    mode: 'main',
+    actorsOptions: {
+      customer: { accessor: 'email', entityIdAccessor: 'email' },
+      user: { accessor: 'email', entityIdAccessor: 'email' }
+    }
   }
 
   /**

@@ -1,6 +1,6 @@
-import { AuthIdentityDTO } from "@medusajs/framework/types"
 import { ContainerRegistrationKeys, isDefined, Modules } from "@medusajs/framework/utils"
-import { createStep, StepResponse, transform } from "@medusajs/framework/workflows-sdk"
+import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
+import { OtpOptions } from "../../types"
 
 export const getAuthIdentityStep = createStep(
   "get-auth-identity",
@@ -8,17 +8,24 @@ export const getAuthIdentityStep = createStep(
     identifier: string,
     provider?: string,
     actorType?: string,
+    foundActor?: Record<string, unknown>
+    actorOptions?: Required<OtpOptions>['actorsOptions'][string]
   }, { container }) => {
     const authModule = container.resolve(Modules.AUTH)
     const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
     logger.info(`Getting auth identity for identifier: ${input.identifier}`)
     logger.info(`Provider: ${input.provider}`)
     logger.info(`Actor type: ${input.actorType}`)
+    logger.info(`Found actor: ${JSON.stringify(input.foundActor)}`)
+    logger.info(`Actor options: ${JSON.stringify(input.actorOptions)}`)
+
+    const entityId = input.foundActor?.[input.actorOptions?.entityIdAccessor!] as string
+    logger.info(`Entity ID: ${entityId}`)
 
     const authIdentities = await authModule.listAuthIdentities({
       provider_identities: {
         ...(input.provider ? { provider: input.provider } : {}),
-        entity_id: input.identifier
+        entity_id: entityId
       }
     }, {
       relations: ['provider_identities']

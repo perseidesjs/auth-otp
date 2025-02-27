@@ -26,10 +26,13 @@ export const POST = async (
       }
     })
   } else {
+    const actorOptions = pluginOptions.actorsOptions![actorType]
+
     await generateSecondaryModeOtpWorkflow(req.scope).run({
       input: {
         identifier,
-        actorType
+        actorType,
+        actorOptions
       }
     })
   }

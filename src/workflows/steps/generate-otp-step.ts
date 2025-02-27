@@ -1,6 +1,6 @@
 import { ICacheService } from "@medusajs/framework/types"
 import { Modules, ContainerRegistrationKeys } from "@medusajs/framework/utils"
-import { createStep, StepResponse, transform } from "@medusajs/framework/workflows-sdk"
+import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import getPluginOptions from "../../utils/get-plugin-options"
 import { OtpUtils } from "../../utils/otp"
 

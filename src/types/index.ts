@@ -10,6 +10,27 @@ export type OtpOptions = {
    * @default 'main'
    */
   mode: 'main' | 'secondary'
+  /**
+   * The options for the actors.
+   * Only used when `mode` is `secondary`, as the `main` mode will create a new auth identity no matter the identifier value passed.
+   * @default { customer: { accessor: 'email' }, user: { accessor: 'email' } }
+   */
+  actorsOptions?: {
+    [actorType: string]: {
+      /**
+       * The accessor to get the identifier from the actor.
+       * @example
+       * accessor: 'phone' // Will use the `phone` column of the actor as the identifier.
+       */
+      accessor: string
+      /**
+       * The accessor to get the entity id from the actor.
+       * @example
+       * entityIdAccessor: 'email' // Will use the `email` column of the actor as the entity id.
+       */
+      entityIdAccessor: string
+    }
+  }
 }
 
 export enum Events {
