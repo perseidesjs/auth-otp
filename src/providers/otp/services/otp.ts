@@ -1,17 +1,11 @@
-import { AuthenticationInput, AuthIdentityProviderService, AuthenticationResponse, ICacheService, Logger, AuthIdentityDTO, IEventBusModuleService } from "@medusajs/framework/types"
+import { AuthenticationInput, AuthIdentityProviderService, AuthenticationResponse, ICacheService, Logger, AuthIdentityDTO } from "@medusajs/framework/types"
 import { AbstractAuthModuleProvider, ContainerRegistrationKeys, isDefined, MedusaError, Modules } from "@medusajs/framework/utils"
-import { createHmac, randomBytes } from 'node:crypto'
+import { OtpUtils } from "../../../utils/otp"
+import { OtpOptions } from "../../../types"
 
 type InjectedDependencies = {
   [Modules.CACHE]: ICacheService
   [ContainerRegistrationKeys.LOGGER]: Logger
-}
-
-type ProviderOptions = {
-  /** the number of digits the OTP should have @default 6 */
-  digits: number
-  /** the time to live of the OTP in seconds @default 60 * 5 (5 minutes) */
-  ttl: number
 }
 
 export const OTP_RETURN_KEY = "otp_generated"
@@ -21,50 +15,21 @@ export class OtpAuthProviderService extends AbstractAuthModuleProvider {
 
   protected cacheService_: ICacheService
   protected logger_: Logger
-  protected options_: ProviderOptions
+  protected options_: OtpOptions
 
-  constructor(container: InjectedDependencies, options: ProviderOptions) {
+  constructor(container: InjectedDependencies, options: OtpOptions) {
     super()
     this.cacheService_ = container[Modules.CACHE]
     this.logger_ = container[ContainerRegistrationKeys.LOGGER]
-
-    const DEFAULT_OPTIONS: ProviderOptions = {
-      digits: 6,
-      ttl: 60 * 5
-    }
-
-    this.options_ = options || DEFAULT_OPTIONS
+    this.options_ = options || OtpUtils.DEFAULT_OPTIONS
   }
 
   /**
-   * Generate a TOTP (Time-based One-Time Password)
-   * @param secret The secret to generate the OTP from
-   * @param timeStep The time step to use for the OTP
-   * @returns {string} The OTP
-   */
-  generateTOTP(secret: string, timeStep: number): string {
-    const time = Math.floor(Date.now() / 1000 / timeStep)
-
-    const hmac = createHmac('sha1', Buffer.from(secret, 'hex'))
-    hmac.update(Buffer.from(time.toString(), 'utf-8'))
-    const hmacResult = hmac.digest()
-
-    const offset = hmacResult[hmacResult.length - 1] & 0xf
-    const binary =
-      ((hmacResult[offset] & 0x7f) << 24) |
-      ((hmacResult[offset + 1] & 0xff) << 16) |
-      ((hmacResult[offset + 2] & 0xff) << 8) |
-      (hmacResult[offset + 3] & 0xff)
-
-    return (binary % Math.pow(10, this.options_.digits)).toString().padStart(this.options_.digits, '0')
-  }
-
-  /**
-   * Verify the OTP
-   * @param key The key to verify the OTP for
-   * @param providedOtp The OTP to verify
-   * @returns {boolean} True if the OTP is valid, false otherwise
-   */
+ * Verify the OTP
+ * @param key The key to verify the OTP for
+ * @param providedOtp The OTP to verify
+ * @returns {boolean} True if the OTP is valid, false otherwise
+ */
   async verify(key: string, providedOtp: string): Promise<boolean> {
     const storedOtp = await this.cacheService_.get(`totp:${key}`)
 
@@ -81,17 +46,15 @@ export class OtpAuthProviderService extends AbstractAuthModuleProvider {
     data: AuthenticationInput,
     authIdentityProviderService: AuthIdentityProviderService
   ): Promise<AuthenticationResponse> {
-
     const identifier = data.body?.identifier
     const otp = data.body?.otp
 
-    if (!isDefined(identifier)) {
+    if (!isDefined(identifier) || !isDefined(otp)) {
       return {
         success: false,
-        error: "Identifier is required"
+        error: "Identifier and OTP are required"
       }
     }
-
 
     const authIdentity = await authIdentityProviderService.retrieve({
       entity_id: identifier
@@ -101,62 +64,24 @@ export class OtpAuthProviderService extends AbstractAuthModuleProvider {
       // If there is no matching identity, we don't want to leak any information so we return a success
       this.logger_.warn(`No matching identity found`)
       return {
-        success: true,
-        location: OTP_RETURN_KEY
+        success: false,
+        error: "Invalid OTP"
       }
     }
+    // We're in a case we want to verify the OTP
+    const isValid = await this.verify(authIdentity.id, otp)
 
-    if (isDefined(identifier) && !isDefined(otp)) {
-      // We're in a case we want to send the OTP to the user
-      const otpSecret = authIdentity.provider_identities?.find((provider) => provider.provider === this.identifier)?.provider_metadata?.otp_secret as string | undefined
-
-      if (!otpSecret) {
-        this.logger_.error(`No OTP secret found for identity ${authIdentity.id}, make sure that you have registered the identity with the OTP auth module`)
-        return {
-          success: false,
-          error: "Invalid request"
-        }
-      }
-
-      const totp = this.generateTOTP(otpSecret, this.options_.ttl)
-      await this.cacheService_.set(`totp:${authIdentity.id}`, totp, this.options_.ttl)
-
+    if (!isValid) {
       return {
-        success: true,
-        location: OTP_RETURN_KEY
-      }
-    }
-
-    if (isDefined(identifier) && isDefined(otp)) {
-      // We're in a case we want to verify the OTP
-      const isValid = await this.verify(authIdentity.id, otp)
-
-      if (!isValid) {
-        return {
-          success: false,
-          error: `Invalid OTP for ${identifier}`
-        }
-      }
-
-      return {
-        success: true,
-        authIdentity
+        success: false,
+        error: `Invalid OTP`
       }
     }
 
     return {
       success: true,
-      location: OTP_RETURN_KEY
+      authIdentity
     }
-  }
-
-
-  /**
-   * Generate a random secret for the customer that will be used to generate the OTP
-   * @returns {string} The secret
-   */
-  generateOTPSecret(): string {
-    return randomBytes(32).toString('hex')
   }
 
   async register(
@@ -181,12 +106,8 @@ export class OtpAuthProviderService extends AbstractAuthModuleProvider {
       if (error.type !== MedusaError.Types.NOT_FOUND) return { success: false, error: error.message }
 
       // If the identity is not found, we create it
-      const otpSecret = this.generateOTPSecret()
       authIdentity = await authIdentityProviderService.create({
         entity_id: data.body!.identifier,
-        provider_metadata: {
-          otp_secret: otpSecret
-        }
       })
     }
 
@@ -201,6 +122,10 @@ export class OtpAuthProviderService extends AbstractAuthModuleProvider {
       success: true,
       authIdentity
     }
+  }
+
+  getOptions(): OtpOptions {
+    return this.options_
   }
 }
 

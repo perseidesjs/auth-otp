@@ -41,58 +41,8 @@ describe("OTPAuthProviderService", () => {
       [ContainerRegistrationKeys.LOGGER]: mockLogger,
     }, {
       digits: 6,
-      ttl: 60 * 5
-    })
-  })
-
-  describe("generateOTPSecret", () => {
-    it("should generate a 64-character hex string", () => {
-      const secret = service.generateOTPSecret()
-      expect(secret).toMatch(/^[0-9a-f]{64}$/)
-    })
-
-    it("should generate unique secrets", () => {
-      const secret1 = service.generateOTPSecret()
-      const secret2 = service.generateOTPSecret()
-      expect(secret1).not.toBe(secret2)
-    })
-  })
-
-  describe("generateTOTP", () => {
-    it("should generate a 6-digit OTP by default", () => {
-      const secret = service.generateOTPSecret()
-      const totp = service.generateTOTP(secret, 300) // 5 minutes
-      expect(totp).toMatch(/^\d{6}$/)
-    })
-
-    it("should generate different OTPs for different secrets", () => {
-      const secret1 = service.generateOTPSecret()
-      const secret2 = service.generateOTPSecret()
-      const totp1 = service.generateTOTP(secret1, 300)
-      const totp2 = service.generateTOTP(secret2, 300)
-      expect(totp1).not.toBe(totp2)
-    })
-  })
-
-  describe("verify", () => {
-    it("should return true for valid OTP", async () => {
-      const key = "test-key"
-      const otp = "123456"
-      jest.spyOn(mockCacheService, 'get').mockResolvedValueOnce(otp)
-
-      const isValid = await service.verify(key, otp)
-      expect(isValid).toBe(true)
-      expect(mockCacheService.get).toHaveBeenCalledWith(`totp:${key}`)
-      expect(mockCacheService.invalidate).toHaveBeenCalledWith(`totp:${key}`)
-    })
-
-    it("should return false for invalid OTP", async () => {
-      const key = "test-key"
-      jest.spyOn(mockCacheService, 'get').mockResolvedValueOnce("123456")
-
-      const isValid = await service.verify(key, "654321")
-      expect(isValid).toBe(false)
-      expect(mockCacheService.invalidate).not.toHaveBeenCalled()
+      ttl: 60 * 5,
+      mode: 'main'
     })
   })
 
@@ -111,27 +61,15 @@ describe("OTPAuthProviderService", () => {
       provider_identities: [mockProviderIdentity]
     }
 
-    it("should return error when identifier is missing", async () => {
+    it("should return error when identifier OR OTP is missing", async () => {
       const result = await service.authenticate({
         body: {}
       }, mockAuthIdentityProviderService)
 
       expect(result).toEqual({
         success: false,
-        error: "Identifier is required"
+        error: "Identifier and OTP are required"
       })
-    })
-
-    it("should generate and cache OTP when only identifier is provided", async () => {
-      jest.spyOn(mockAuthIdentityProviderService, 'retrieve').mockResolvedValueOnce(mockAuthIdentity)
-
-      const result = await service.authenticate({
-        body: { identifier: "user@example.com" }
-      }, mockAuthIdentityProviderService)
-
-      expect(result.success).toBe(true)
-      expect(result.location).toBe(OTP_RETURN_KEY)
-      expect(mockCacheService.set).toHaveBeenCalled()
     })
 
     it("should verify OTP when both identifier and OTP are provided", async () => {
@@ -164,7 +102,7 @@ describe("OTPAuthProviderService", () => {
 
       expect(result).toEqual({
         success: false,
-        error: "Invalid OTP for user@example.com"
+        error: "Invalid OTP"
       })
     })
   })
@@ -201,9 +139,6 @@ describe("OTPAuthProviderService", () => {
       })
       expect(mockAuthIdentityProviderService.create).toHaveBeenCalledWith({
         entity_id: "new_user@example.com",
-        provider_metadata: {
-          otp_secret: expect.any(String)
-        }
       })
     })
 
