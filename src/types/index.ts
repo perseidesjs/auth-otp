@@ -59,8 +59,9 @@ export type OtpOptions = {
        *
        * @example
        * accessor: 'phone' // Will use the `phone` column of the actor as the identifier
+       * accessor: ['phone', 'email'] // Will use the `phone` or `email` column of the actor as the identifier
        */
-      accessor: string
+      accessor: string | string[]
 
       /**
        * The field name used to get the entity ID when creating or looking up an AuthIdentity.

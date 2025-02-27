@@ -11,12 +11,19 @@ export const getActorStep = createStep(
   }, { container }) => {
     const remoteQuery = container.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
 
+    const filters: Record<string, unknown> = {}
+    if (Array.isArray(input.accessorsPerActor.accessor)) {
+      filters['$or'] = input.accessorsPerActor.accessor.map(accessor => ({
+        [accessor]: input.identifier
+      }))
+    } else {
+      filters[input.accessorsPerActor.accessor] = input.identifier
+    }
+
     const actor = await remoteQuery.graph({
       entity: input.actorType,
       fields: ['*'],
-      filters: {
-        [input.accessorsPerActor.accessor]: input.identifier
-      }
+      filters
     })
 
     return new StepResponse({ actor })
