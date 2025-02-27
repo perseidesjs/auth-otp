@@ -83,6 +83,26 @@ export type OtpOptions = {
       entityIdAccessor: string
     }
   }
+
+  http?: {
+    /**
+     * Controls how errors are handled in HTTP responses when generating OTPs.
+     *
+     * @property {boolean} alwaysReturnSuccess - When true, always returns a success response regardless of errors
+     * to prevent data leakage. When false, actual errors will be returned in the response.
+     * @default true
+     *
+     * @property {boolean} throwOnError - When true, throws errors that occur during OTP generation.
+     * When false, errors are caught and handled according to alwaysReturnSuccess.
+     * @default false
+     */
+    alwaysReturnSuccess?: boolean
+    /**
+     * When true, logs a warning when an error occurs during OTP generation.
+     * @default true
+     */
+    warnOnError?: boolean
+  }
 }
 
 export enum Events {

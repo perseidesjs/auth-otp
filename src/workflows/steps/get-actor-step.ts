@@ -1,4 +1,4 @@
-import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/utils"
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { OtpOptions } from "../../types"
 
@@ -25,6 +25,10 @@ export const getActorStep = createStep(
       fields: ['*'],
       filters
     })
+
+    if (!actor.data.length) {
+      throw new MedusaError(MedusaError.Types.NOT_FOUND, `No actor found`)
+    }
 
     return new StepResponse({ actor })
   }

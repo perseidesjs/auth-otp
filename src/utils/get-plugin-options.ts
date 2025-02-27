@@ -20,6 +20,10 @@ export default function getPluginOptions(configModule: ConfigModule) {
     accessorsPerActor: {
       ...OtpUtils.DEFAULT_OPTIONS.accessorsPerActor,
       ...pluginOptions?.accessorsPerActor
+    },
+    http: {
+      ...OtpUtils.DEFAULT_OPTIONS.http,
+      ...pluginOptions?.http
     }
   }
 }

@@ -15,14 +15,12 @@ const generateOtpWorkflow = createWorkflow(
       accessorsPerActor: input.accessorsPerActor
     })
 
-
     const authIdentityResult = when(actorResult, ({ actor }) => isDefined(actor) && isDefined(actor.data) && actor.data.length > 0).then(() => getAuthIdentityStep({
       identifier: input.identifier,
       actorType: input.actorType,
       accessorsPerActor: input.accessorsPerActor,
       foundActor: actorResult.actor.data[0]
     }))
-
 
     const generatedOtpResult = when({ authIdentityResult }, (result) =>
       isDefined(result.authIdentityResult)

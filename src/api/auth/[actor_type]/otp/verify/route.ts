@@ -7,6 +7,7 @@ import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/util
 import getPluginOptions from "../../../../../utils/get-plugin-options"
 import verifyOtpWorkflow from "../../../../../workflows/verify-otp"
 import { generateJwtTokenForAuthIdentity } from "@medusajs/medusa/api/auth/utils/generate-jwt-token"
+import { logger } from "@medusajs/framework"
 
 export const POST = async (
   req: MedusaRequest<PostAuthActorTypeOtpVerifySchema>,
@@ -18,26 +19,39 @@ export const POST = async (
   const configModule = req.scope.resolve(ContainerRegistrationKeys.CONFIG_MODULE)
   const pluginOptions = getPluginOptions(configModule)
 
-  const { result } = await verifyOtpWorkflow(req.scope).run({
-    input: {
-      identifier,
-      otp,
-      actorType,
-      accessorsPerActor: pluginOptions.accessorsPerActor![actorType]
+  try {
+
+
+    const { result } = await verifyOtpWorkflow(req.scope).run({
+      input: {
+        identifier,
+        otp,
+        actorType,
+        accessorsPerActor: pluginOptions.accessorsPerActor![actorType]
+      }
+    })
+
+    if (result.isValid) {
+      const { http } = configModule.projectConfig
+      const token = generateJwtTokenForAuthIdentity({ authIdentity: result.authIdentity!, actorType }, {
+        secret: http.jwtSecret,
+        expiresIn: http.jwtExpiresIn
+      })
+
+      res.send({
+        token
+      })
+    } else {
+      throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid OTP`)
     }
-  })
-
-  if (result.isValid) {
-    const { http } = configModule.projectConfig
-    const token = generateJwtTokenForAuthIdentity({ authIdentity: result.authIdentity!, actorType }, {
-      secret: http.jwtSecret,
-      expiresIn: http.jwtExpiresIn
-    })
-
-    res.send({
-      token
-    })
-  } else {
-    throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid OTP`)
+  } catch (error) {
+    if (pluginOptions.http?.alwaysReturnSuccess) {
+      if (pluginOptions.http.warnOnError) {
+        logger.error(error)
+      }
+      throw new MedusaError(MedusaError.Types.INVALID_DATA, `Invalid OTP`)
+    }
+    throw error
   }
+
 }

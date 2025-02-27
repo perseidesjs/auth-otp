@@ -11,6 +11,10 @@ export class OtpUtils {
     accessorsPerActor: {
       customer: { accessor: 'email', entityIdAccessor: 'email' },
       user: { accessor: 'email', entityIdAccessor: 'email' }
+    },
+    http: {
+      alwaysReturnSuccess: true, // Always return success to prevent data leakage
+      warnOnError: true // Warn when an error occurs during OTP generation
     }
   }
 
