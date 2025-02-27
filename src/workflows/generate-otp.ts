@@ -6,13 +6,8 @@ import { generateOtpStep } from "./steps/generate-otp-step"
 import { getActorStep } from "./steps/get-actor-step"
 import { isDefined } from "@medusajs/framework/utils"
 
-/**
- * This workflow is used to generate a TOTP (Time-based One-Time Password) for a given identifier.
- * It should only be used when the OTP plugin is configured as the main authentication provider.
- * This is a private workflow that is used internally by the `/api/auth/[actor_type]/otp/generate` API route.
- */
-const generateSecondaryModeOtpWorkflow = createWorkflow(
-  "generate-secondary-mode-otp",
+const generateOtpWorkflow = createWorkflow(
+  "generate-otp",
   function (input: { identifier: string, actorType: string, actorOptions: Required<OtpOptions>['actorsOptions'][string] }) {
     const actorResult = getActorStep({
       identifier: input.identifier,
@@ -50,6 +45,6 @@ const generateSecondaryModeOtpWorkflow = createWorkflow(
   }
 )
 
-export default generateSecondaryModeOtpWorkflow
+export default generateOtpWorkflow
 
 

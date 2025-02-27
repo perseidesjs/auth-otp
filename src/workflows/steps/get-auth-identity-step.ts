@@ -6,7 +6,6 @@ export const getAuthIdentityStep = createStep(
   "get-auth-identity",
   async (input: {
     identifier: string,
-    provider?: string,
     actorType?: string,
     foundActor?: Record<string, unknown>
     actorOptions?: Required<OtpOptions>['actorsOptions'][string]
@@ -14,7 +13,6 @@ export const getAuthIdentityStep = createStep(
     const authModule = container.resolve(Modules.AUTH)
     const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
     logger.info(`Getting auth identity for identifier: ${input.identifier}`)
-    logger.info(`Provider: ${input.provider}`)
     logger.info(`Actor type: ${input.actorType}`)
     logger.info(`Found actor: ${JSON.stringify(input.foundActor)}`)
     logger.info(`Actor options: ${JSON.stringify(input.actorOptions)}`)
@@ -24,7 +22,6 @@ export const getAuthIdentityStep = createStep(
 
     const authIdentities = await authModule.listAuthIdentities({
       provider_identities: {
-        ...(input.provider ? { provider: input.provider } : {}),
         entity_id: entityId
       }
     }, {
@@ -34,18 +31,6 @@ export const getAuthIdentityStep = createStep(
 
     if (authIdentities.length === 0) {
       throw new Error("Auth identity not found")
-    }
-
-    // If no provider is specified (secondary mode), filter out OTP provider entities
-    if (!input.provider) {
-      authIdentities.forEach(identity => {
-        if (identity.provider_identities && Array.isArray(identity.provider_identities)) {
-          identity.provider_identities = identity.provider_identities.filter(
-            providerIdentity => providerIdentity.provider !== 'otp'
-          )
-        }
-      })
-      logger.info(`Auth identities after filtering OTP providers: ${JSON.stringify(authIdentities)}`)
     }
 
     logger.info(`Auth identities: ${JSON.stringify(authIdentities)}`)
