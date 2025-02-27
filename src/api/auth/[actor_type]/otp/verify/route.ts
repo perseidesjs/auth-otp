@@ -18,11 +18,6 @@ export const POST = async (
   const configModule = req.scope.resolve(ContainerRegistrationKeys.CONFIG_MODULE)
   const pluginOptions = getPluginOptions(configModule)
 
-  if (pluginOptions.mode === 'main') {
-    console.warn(`OTP verification through the API route is not supported in main mode, please use the /api/auth/otp/verify endpoint instead`)
-    throw new MedusaError(MedusaError.Types.INVALID_DATA, `Cannot verify OTP`)
-  }
-
   const { result } = await verifyOtpWorkflow(req.scope).run({
     input: {
       identifier,

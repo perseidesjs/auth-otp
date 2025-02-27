@@ -16,6 +16,10 @@ export default function getPluginOptions(configModule: ConfigModule) {
 
   return {
     ...OtpUtils.DEFAULT_OPTIONS,
-    ...pluginOptions
+    ...pluginOptions,
+    accessorsPerActor: {
+      ...OtpUtils.DEFAULT_OPTIONS.accessorsPerActor,
+      ...pluginOptions?.accessorsPerActor
+    }
   }
 }
