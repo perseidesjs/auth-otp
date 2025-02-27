@@ -4,6 +4,7 @@ import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
 import { Events } from "../types"
 import OtpAuthProviderService from "../providers/otp/services/otp"
 import { generateOtpStep } from "./steps/generate-otp-step"
+import { isDefined, isPresent } from "@medusajs/framework/utils"
 
 /**
  * This workflow is used to generate a TOTP (Time-based One-Time Password) for a given identifier.
@@ -18,7 +19,7 @@ const generateMainModeOtpWorkflow = createWorkflow(
       return generateOtpStep({ authIdentityId: authIdentityResult.authIdentity.id, identifier: input.identifier })
     })
 
-    when({ otp: generatedOtpResult?.otp }, (result) => !!result.otp).then(() => {
+    when({ otp: generatedOtpResult?.otp }, (result) => isPresent(result.otp)).then(() => {
       emitEventStep({
         eventName: Events.OTP_GENERATED,
         data: {

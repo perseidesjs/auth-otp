@@ -1,9 +1,8 @@
-import { createWorkflow, transform, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { createWorkflow, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
 import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
 import { getStoredOtpStep } from "./steps/get-stored-otp-step"
 import { validateOtpStep } from "./steps/validate-otp-step"
-import { emitEventStep } from "@medusajs/medusa/core-flows"
-import { Events } from "../types"
+import { isPresent } from "@medusajs/framework/utils"
 
 /**
  * This workflow is used to verify a TOTP (Time-based One-Time Password) for a given identifier.
@@ -20,7 +19,7 @@ const verifyOtpWorkflow = createWorkflow(
 
     const storedOtpResult = when(
       authIdentityResult,
-      (result) => !!result.authIdentity && !!result.authIdentity.id
+      (result) => isPresent(result.authIdentity.id)
     ).then(() => {
       return getStoredOtpStep({
         authIdentityId: authIdentityResult.authIdentity.id,
@@ -30,7 +29,7 @@ const verifyOtpWorkflow = createWorkflow(
 
     const validateOtpResult = when(
       { storedOtp: storedOtpResult?.storedOtp },
-      (result) => !!result.storedOtp
+      (result) => isPresent(result.storedOtp)
     ).then(() => {
       return validateOtpStep({
         storedOtp: storedOtpResult?.storedOtp,
