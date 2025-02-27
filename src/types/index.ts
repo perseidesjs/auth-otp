@@ -75,11 +75,10 @@ export type OtpOptions = {
       accessor: string | string[]
 
       /**
-       * The field name used to get the entity ID when creating or looking up an AuthIdentity.
-       * This is particularly important when integrating with other auth providers.
+       * The field name used to get the entity ID when looking up an AuthIdentity.
        *
        * @example
-       * entityIdAccessor: 'id' // Will use the `id` column of the actor as the entity ID in AuthIdentity
+       * entityIdAccessor: 'email' // Will use the `email` column of the actor as the entity ID in AuthIdentity
        */
       entityIdAccessor: string
     }
