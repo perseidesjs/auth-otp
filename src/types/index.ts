@@ -14,16 +14,27 @@
  *   {
  *     customer: {
  *       accessor: 'phone',       // Will look up customers by their phone field
- *       entityIdAccessor: 'id'   // Will use the customer's ID as the entity ID in AuthIdentity
+ *       entityIdAccessor: 'email'   // Will look up for an AuthIdentity with the customer's email as the `entity_id`
  *     }
+ *   }
+ *   ```
+ *
+ * You can also use an array of accessors to look up an actor by multiple fields.
+ * For example, if you want to look up a customer by multiple fields:
+ *   ```
+ *   {
+ *     customer: { accessor: ['phone', 'email'], entityIdAccessor: 'id' }
  *   }
  *   ```
  *
  *   The `accessor` defines which field to use when looking up an actor by the provided identifier.
  *   For example, with `accessor: 'phone'`, the system will check `customer.phone` to find matching customers.
  *
- *   The `entityIdAccessor` defines which field to use as the entity ID when creating or looking up
- *   an AuthIdentity. This is particularly important when integrating with other auth providers.
+ *   The `entityIdAccessor` defines which field to use as the entity ID when looking up
+ *   an AuthIdentity.
+ *
+ *   When using the `emailpass` auth provider for example, the `entityIdAccessor` will be the `email` field.
+ *   This is because the `emailpass` auth provider uses the `email` field when creating an auth identity.
  *
  *   Default is: { customer: { accessor: 'email', entityIdAccessor: 'id' }, user: { accessor: 'email', entityIdAccessor: 'id' } }
  */
