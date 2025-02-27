@@ -12,7 +12,7 @@ export default function getPluginOptions(configModule: ConfigModule) {
     return typeof plugin === 'object' && "resolve" in plugin && "options" in plugin
   }
 
-  const pluginOptions = configModule.plugins.filter(isPluginWithOptions).find((plugin) => plugin.resolve.includes('@perseidejs/auth-otp'))?.options as OtpOptions | undefined
+  const pluginOptions = configModule.plugins.filter(isPluginWithOptions).find((plugin) => plugin.resolve.includes('@perseidesjs/auth-otp'))?.options as OtpOptions | undefined
 
   return {
     ...OtpUtils.DEFAULT_OPTIONS,

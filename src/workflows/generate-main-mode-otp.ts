@@ -1,9 +1,9 @@
-import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { createWorkflow, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
 import { emitEventStep } from "@medusajs/medusa/core-flows"
 import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
 import { Events } from "../types"
 import OtpAuthProviderService from "../providers/otp/services/otp"
-import { generateOtpStep } from "./steps/generate-totp-step"
+import { generateOtpStep } from "./steps/generate-otp-step"
 
 /**
  * This workflow is used to generate a TOTP (Time-based One-Time Password) for a given identifier.
@@ -12,16 +12,20 @@ import { generateOtpStep } from "./steps/generate-totp-step"
  */
 const generateMainModeOtpWorkflow = createWorkflow(
   "generate-main-mode-otp",
-  function (identifier: string) {
-    const { authIdentity } = getAuthIdentityStep({ identifier, provider: OtpAuthProviderService.identifier })
-    const { otp } = generateOtpStep({ authIdentity, identifier })
+  function (input: { identifier: string, actorType: string }) {
+    const authIdentityResult = getAuthIdentityStep({ identifier: input.identifier, provider: OtpAuthProviderService.identifier, actorType: input.actorType })
+    const generatedOtpResult = when(authIdentityResult, (result) => !!result.authIdentity && !!result.authIdentity.id).then(() => {
+      return generateOtpStep({ authIdentityId: authIdentityResult.authIdentity.id, identifier: input.identifier })
+    })
 
-    emitEventStep({
-      eventName: Events.OTP_GENERATED,
-      data: {
-        identifier,
-        otp
-      }
+    when({ otp: generatedOtpResult?.otp }, (result) => !!result.otp).then(() => {
+      emitEventStep({
+        eventName: Events.OTP_GENERATED,
+        data: {
+          identifier: input.identifier,
+          otp: generatedOtpResult
+        }
+      })
     })
 
     return new WorkflowResponse('OK')

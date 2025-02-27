@@ -18,16 +18,17 @@ export const POST = async (
   const configModule = req.scope.resolve(ContainerRegistrationKeys.CONFIG_MODULE)
   const pluginOptions = getPluginOptions(configModule)
 
-
   if (pluginOptions.mode === 'main') {
     await generateProviderModeOtpWorkflow(req.scope).run({
-      input: identifier
+      input: {
+        identifier,
+        actorType
+      }
     })
   } else {
     await generateSecondaryModeOtpWorkflow(req.scope).run({
       input: {
         identifier,
-        identifierKey: pluginOptions.identifierKey!,
         actorType
       }
     })

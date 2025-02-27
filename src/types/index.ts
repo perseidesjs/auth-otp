@@ -10,14 +10,6 @@ export type OtpOptions = {
    * @default 'main'
    */
   mode: 'main' | 'secondary'
-  /**
-   * The key to use as identifier when in secondary mode.
-   * This allows sending OTP to different channels like email or phone.
-   * @example 'email' or 'phone'
-   * Only used when `mode` is 'secondary'
-   * @default 'email'
-   */
-  identifierKey?: string
 }
 
 export enum Events {

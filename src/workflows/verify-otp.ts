@@ -1,0 +1,51 @@
+import { createWorkflow, transform, when, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
+import { getStoredOtpStep } from "./steps/get-stored-otp-step"
+import { validateOtpStep } from "./steps/validate-otp-step"
+import { emitEventStep } from "@medusajs/medusa/core-flows"
+import { Events } from "../types"
+
+/**
+ * This workflow is used to verify a TOTP (Time-based One-Time Password) for a given identifier.
+ * It should only be used when the OTP plugin is configured as the main authentication provider.
+ * This is a private workflow that is used internally by the API routes for OTP verification.
+ */
+const verifyOtpWorkflow = createWorkflow(
+  "verify-otp",
+  function (input: { identifier: string, otp: string, actorType: string }) {
+    const authIdentityResult = getAuthIdentityStep({
+      identifier: input.identifier,
+      actorType: input.actorType
+    })
+
+    const storedOtpResult = when(
+      authIdentityResult,
+      (result) => !!result.authIdentity && !!result.authIdentity.id
+    ).then(() => {
+      return getStoredOtpStep({
+        authIdentityId: authIdentityResult.authIdentity.id,
+        identifier: input.identifier
+      })
+    })
+
+    const validateOtpResult = when(
+      { storedOtp: storedOtpResult?.storedOtp },
+      (result) => !!result.storedOtp
+    ).then(() => {
+      return validateOtpStep({
+        storedOtp: storedOtpResult?.storedOtp,
+        otp: input.otp
+      })
+    })
+
+    // If we reach this point, validation was successful
+    return new WorkflowResponse({
+      isValid: validateOtpResult?.isValid,
+      authIdentity: authIdentityResult?.authIdentity
+    })
+  }
+)
+
+export default verifyOtpWorkflow
+
+

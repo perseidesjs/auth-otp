@@ -8,8 +8,7 @@ export class OtpUtils {
   static DEFAULT_OPTIONS: OtpOptions = {
     digits: 6, // 6 digits
     ttl: 60 * 5, // 5 minutes
-    mode: 'main',
-    identifierKey: 'email'
+    mode: 'main'
   }
 
   /**

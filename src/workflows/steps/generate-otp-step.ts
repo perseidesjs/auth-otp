@@ -1,13 +1,13 @@
-import { AuthIdentityDTO, ICacheService } from "@medusajs/framework/types"
+import { ICacheService } from "@medusajs/framework/types"
 import { Modules, ContainerRegistrationKeys } from "@medusajs/framework/utils"
-import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
+import { createStep, StepResponse, transform } from "@medusajs/framework/workflows-sdk"
 import getPluginOptions from "../../utils/get-plugin-options"
 import { OtpUtils } from "../../utils/otp"
 
 export const generateOtpStep = createStep(
   "generate-otp",
   async (input: {
-    authIdentity: AuthIdentityDTO
+    authIdentityId: string
     identifier: string
   }, { container }) => {
     const cacheService = container.resolve<ICacheService>(Modules.CACHE)
@@ -15,13 +15,10 @@ export const generateOtpStep = createStep(
     const pluginOptions = getPluginOptions(configModule)
 
     const otp = OtpUtils.generateRandomOTP(pluginOptions.digits)
+    const cacheKey = `totp:${input.authIdentityId}`
 
-    // Store the OTP in the cache with the configured TTL
-    await cacheService.set(`totp:${input.authIdentity.id}`, otp, pluginOptions.ttl)
+    await cacheService.set(cacheKey, otp, pluginOptions.ttl)
 
-    return new StepResponse({
-      ...input,
-      otp,
-    })
+    return new StepResponse({ otp })
   }
 )
