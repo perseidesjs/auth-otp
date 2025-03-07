@@ -17,8 +17,6 @@ on:
           - canary
     branches:
       - develop
-  schedule:
-    - cron: "0 */1 * * *"
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
