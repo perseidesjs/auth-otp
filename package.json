@@ -5,7 +5,8 @@
   "author": "adevinwild (https://perseides.org)",
   "types": "./.medusa/server/src/types/index.d.ts",
   "files": [
-    ".medusa/server"
+    ".medusa/server",
+    "CHANGELOG.md"
   ],
   "license": "SEE LICENSE IN LICENSE.md",
   "exports": {

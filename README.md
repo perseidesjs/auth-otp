@@ -24,15 +24,6 @@
   <img src="./.github/preview.gif" alt="Preview of @perseidesjs/auth-otp in action">
 </p>
 
-## Features
 
-- 🔐 Secure OTP-based authentication for Medusa 2.x
-- ⚡ Easy integration with existing Medusa auth system
-- ⚙️ Configurable OTP and identifiers
-- 🔧 Built with TypeScript for better type safety
-
-## Prerequisites
-
-- Medusa.js (v2.3.0 or later)
-- Node.js (v20 or later)
-- Cache module (Redis for production)
+# [Documentation](https://docs.perseides.org/plugins/auth-otp/getting-started)
+Access the documentation for the package, by clicking ["here"](https://docs.perseides.org/plugins/auth-otp/getting-started)
