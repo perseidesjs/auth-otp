@@ -4,53 +4,21 @@ on:
   push:
     branches:
       - develop
-    paths-ignore:
-      - "**"
-      - "!.changeset/**"
-      - "!package.json"
-      - "!yarn.lock"
-  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  check-commit:
-    name: Check Commit Message
-    runs-on: ubuntu-latest
-    outputs:
-      should-release: ${{ steps.check.outputs.match }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
-      - name: Check commit message
-        id: check
-        run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          if [[ "$COMMIT_MSG" == *"chore: Release"* ]]; then
-            echo "match=true" >> $GITHUB_OUTPUT
-          else
-            echo "match=false" >> $GITHUB_OUTPUT
-          fi
-
   release:
-    name: Release
-    needs: check-commit
-    if: needs.check-commit.outputs.should-release == 'true' || github.event_name == 'workflow_dispatch'
+    name: Version packages PR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js 20.x
+      - name: Setup Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 20.x
-          registry-url: 'https://registry.npmjs.org/'
+          node-version: 20
 
       - name: Creating .npmrc
         run: |
@@ -60,21 +28,13 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Install Dependencies
         run: yarn
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Build
+      - name: Build packages
         run: yarn build
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Release Pull Request
-        id: changesets
         uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
