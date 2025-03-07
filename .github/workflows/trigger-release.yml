@@ -11,8 +11,9 @@ on:
         description: What tag do you want to release?
         required: true
         options:
-          - preview
           - next
+          - preview
+          - latest
           - snapshot
           - canary
     branches:
