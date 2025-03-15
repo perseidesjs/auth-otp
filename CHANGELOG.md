@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 1.4.0
+
+### Minor Changes
+
+- 2ea3222: Enhance OTP authentication process with direct access for recently registered users
+
 ## 1.3.0
 
 ### Minor Changes
