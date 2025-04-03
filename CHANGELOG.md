@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 2.0.0
+
+### Major Changes
+
+- bbc6414: Changed the plugin license to MIT
+
 ## 1.4.0
 
 ### Minor Changes
