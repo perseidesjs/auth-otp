@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 2.0.1
+
+### Patch Changes
+
+- 1f55b7d: Keywords update for better discoverability
+
 ## 2.0.0
 
 ### Major Changes
