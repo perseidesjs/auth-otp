@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 2.1.0
+
+### Minor Changes
+
+- ee82ee9: Upgraded to latest versions of Medusa
+
 ## 2.0.1
 
 ### Patch Changes
