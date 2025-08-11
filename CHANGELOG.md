@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 2.1.1
+
+### Patch Changes
+
+- 28b08d4: Fixed the way we access the `app_metadata` inside the `get-auth-identity-step` by handling the `null` value
+
 ## 2.1.0
 
 ### Minor Changes
