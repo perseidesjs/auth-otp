@@ -1,6 +1,7 @@
-import { isDefined, Modules } from "@medusajs/framework/utils"
+import { Modules } from "@medusajs/framework/utils"
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
 import { OtpOptions } from "../../types"
+import { isDefined } from "../../utils/is-defined"
 
 /**
  * Gets an auth identity for a given identifier and actor type.

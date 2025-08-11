@@ -1,5 +1,6 @@
-import { AuthenticationInput, AuthIdentityProviderService, AuthenticationResponse, ICacheService, Logger, AuthIdentityDTO } from "@medusajs/framework/types"
-import { AbstractAuthModuleProvider, ContainerRegistrationKeys, isDefined, MedusaError, Modules } from "@medusajs/framework/utils"
+import { AuthenticationInput, AuthenticationResponse, AuthIdentityDTO, AuthIdentityProviderService, ICacheService, Logger } from "@medusajs/framework/types"
+import { AbstractAuthModuleProvider, ContainerRegistrationKeys, MedusaError, Modules } from "@medusajs/framework/utils"
+import { isDefined } from "../../../utils/is-defined"
 
 type InjectedDependencies = {
   [Modules.CACHE]: ICacheService
