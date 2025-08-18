@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 2.1.2
+
+### Patch Changes
+
+- 60a2fe9: Upgraded peerDependencies
+
 ## 2.1.1
 
 ### Patch Changes
