@@ -1,8 +1,8 @@
 {
-  "name": "@perseidesjs/auth-otp",
+  "name": "@radalin/medusa-auth-otp",
   "version": "2.1.2",
-  "description": "An OTP Auth Provider for Medusa 2.x",
-  "author": "adevinwild (https://perseides.org)",
+  "description": "An OTP Auth Provider for Medusa 2.x. Fork of https://github.com/perseidesjs/auth-otp that supports asymmetric keys",
+  "author": "roy simkes",
   "types": "./.medusa/server/src/types/index.d.ts",
   "files": [
     ".medusa/server",
