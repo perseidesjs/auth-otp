@@ -48,7 +48,7 @@
     "@medusajs/icons": "2.11.3",
     "@medusajs/medusa": "2.11.3",
     "@medusajs/test-utils": "^2.11.3",
-    "@medusajs/ui": "4.0.14",
+    "@medusajs/ui": "4.0.25",
     "@mikro-orm/cli": "6.4.9",
     "@mikro-orm/core": "6.4.9",
     "@mikro-orm/knex": "6.4.9",
@@ -72,13 +72,13 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@medusajs/admin-sdk": ">=2.8.4",
-    "@medusajs/cli": ">2.8.4",
-    "@medusajs/framework": ">2.8.4",
-    "@medusajs/icons": ">2.8.4",
-    "@medusajs/medusa": ">2.8.4",
-    "@medusajs/test-utils": ">2.8.4",
-    "@medusajs/ui": ">4.0.14"
+    "@medusajs/admin-sdk": ">=2.11.3",
+    "@medusajs/cli": ">=2.11.3",
+    "@medusajs/framework": ">=2.11.3",
+    "@medusajs/icons": ">=2.11.3",
+    "@medusajs/medusa": ">=2.11.3",
+    "@medusajs/test-utils": ">=2.11.3",
+    "@medusajs/ui": ">=4.0.25"
   },
   "engines": {
     "node": ">=20"

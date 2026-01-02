@@ -1905,7 +1905,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dnd-kit/core@npm:^6.1.0":
+"@dnd-kit/core@npm:^6.0.0, @dnd-kit/core@npm:^6.1.0":
   version: 6.3.1
   resolution: "@dnd-kit/core@npm:6.3.1"
   dependencies:
@@ -1916,6 +1916,19 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: 10c0/196db95d81096d9dc248983533eab91ba83591770fa5c894b1ac776f42af0d99522b3fd5bb3923411470e4733fcfa103e6ee17adc17b9b7eb54c7fbec5ff7c52
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/sortable@npm:^7.0.0":
+  version: 7.0.2
+  resolution: "@dnd-kit/sortable@npm:7.0.2"
+  dependencies:
+    "@dnd-kit/utilities": "npm:^3.2.0"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@dnd-kit/core": ^6.0.7
+    react: ">=16.8.0"
+  checksum: 10c0/06aeb113eeeb470bb2443bf1c48d597157bb3a1caa9740e60c2fa73a3076e753cd083a2d381f0556bd7e9873e851a49ce8ea14796ac02e2d796eabea4e27196d
   languageName: node
   linkType: hard
 
@@ -1932,7 +1945,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dnd-kit/utilities@npm:^3.2.2":
+"@dnd-kit/utilities@npm:^3.2.0, @dnd-kit/utilities@npm:^3.2.2":
   version: 3.2.2
   resolution: "@dnd-kit/utilities@npm:3.2.2"
   dependencies:
@@ -3366,21 +3379,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@medusajs/icons@npm:2.11.1":
+  version: 2.11.1
+  resolution: "@medusajs/icons@npm:2.11.1"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/1464d49350d280eeb1e992f35f1dcdbe55c26e304c6ec7a16ebba613f09d099b8d0343f9f6385fb0c8101ba7b372f9cddc7ddad9e6b7bbdbdfe89b993c510687
+  languageName: node
+  linkType: hard
+
 "@medusajs/icons@npm:2.11.3":
   version: 2.11.3
   resolution: "@medusajs/icons@npm:2.11.3"
   peerDependencies:
     react: ^18.3.1
   checksum: 10c0/5d070954b41b80852468692388231c3ffbc1989596c2cfe4204db286ed02738eb5cfe3df277c4cb4395f5c64cd1d1342427d72d129bc436bc07c5a2dfaef0903
-  languageName: node
-  linkType: hard
-
-"@medusajs/icons@npm:2.8.4":
-  version: 2.8.4
-  resolution: "@medusajs/icons@npm:2.8.4"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10c0/a673d5c97a591daff07097f45bb43a3fdecf3228f53f845ab58c6da3fdf1e9e4813459b53290405bd08fe8c70f5b82886bf1f3c8c55e4bd2e00865aafea71fe0
   languageName: node
   linkType: hard
 
@@ -3759,11 +3772,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@medusajs/ui@npm:4.0.14":
-  version: 4.0.14
-  resolution: "@medusajs/ui@npm:4.0.14"
+"@medusajs/ui@npm:4.0.25":
+  version: 4.0.25
+  resolution: "@medusajs/ui@npm:4.0.25"
   dependencies:
-    "@medusajs/icons": "npm:2.8.4"
+    "@dnd-kit/core": "npm:^6.0.0"
+    "@dnd-kit/sortable": "npm:^7.0.0"
+    "@dnd-kit/utilities": "npm:^3.2.0"
+    "@medusajs/icons": "npm:2.11.1"
+    "@radix-ui/react-dialog": "npm:1.1.4"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.4"
     "@tanstack/react-table": "npm:8.20.5"
     clsx: "npm:^1.2.1"
     copy-to-clipboard: "npm:^3.3.3"
@@ -3779,7 +3797,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
     react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-  checksum: 10c0/d6c5fbd622b19591f59993ca3e3f004de214b36196d8ab22129b4b03420a0d0b565f647f6f39c5386546b79676319ed78ff8992b531761f48d1fcc36166ba2b8
+  checksum: 10c0/2b7d9133737f6c8d32e029c33ba10eb2767214ae1ca5975e4f6593d4f945c4213322798aafc764afa616665e08cb5574690e7ca03bde89dc37dcd04c8c9e6d01
   languageName: node
   linkType: hard
 
@@ -4774,7 +4792,7 @@ __metadata:
     "@medusajs/icons": "npm:2.11.3"
     "@medusajs/medusa": "npm:2.11.3"
     "@medusajs/test-utils": "npm:^2.11.3"
-    "@medusajs/ui": "npm:4.0.14"
+    "@medusajs/ui": "npm:4.0.25"
     "@mikro-orm/cli": "npm:6.4.9"
     "@mikro-orm/core": "npm:6.4.9"
     "@mikro-orm/knex": "npm:6.4.9"
@@ -4797,13 +4815,13 @@ __metadata:
     vite: "npm:^5.2.11"
     yalc: "npm:^1.0.0-pre.53"
   peerDependencies:
-    "@medusajs/admin-sdk": ">=2.8.4"
-    "@medusajs/cli": ">2.8.4"
-    "@medusajs/framework": ">2.8.4"
-    "@medusajs/icons": ">2.8.4"
-    "@medusajs/medusa": ">2.8.4"
-    "@medusajs/test-utils": ">2.8.4"
-    "@medusajs/ui": ">4.0.14"
+    "@medusajs/admin-sdk": ">=2.11.3"
+    "@medusajs/cli": ">=2.11.3"
+    "@medusajs/framework": ">=2.11.3"
+    "@medusajs/icons": ">=2.11.3"
+    "@medusajs/medusa": ">=2.11.3"
+    "@medusajs/test-utils": ">=2.11.3"
+    "@medusajs/ui": ">=4.0.25"
   languageName: unknown
   linkType: soft
 
@@ -14676,7 +14694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.10.0, pg-pool@npm:^3.10.1":
+"pg-pool@npm:^3.10.0, pg-pool@npm:^3.10.1, pg-pool@npm:^3.7.1":
   version: 3.10.1
   resolution: "pg-pool@npm:3.10.1"
   peerDependencies:
@@ -14694,16 +14712,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-pool@npm:^3.7.1":
-  version: 3.7.1
-  resolution: "pg-pool@npm:3.7.1"
-  peerDependencies:
-    pg: ">=8.0"
-  checksum: 10c0/65bff013102684774f4cfdffbfe0a2b0614252234561d391608f7fd915477e44f5fd0e1968ecc2f42032dcf8bac241d2f724c4f3df90384567d22df37dd3b6ba
-  languageName: node
-  linkType: hard
-
-"pg-protocol@npm:*, pg-protocol@npm:^1.10.0, pg-protocol@npm:^1.10.3":
+"pg-protocol@npm:*, pg-protocol@npm:^1.10.0, pg-protocol@npm:^1.10.3, pg-protocol@npm:^1.7.1":
   version: 1.10.3
   resolution: "pg-protocol@npm:1.10.3"
   checksum: 10c0/f7ef54708c93ee6d271e37678296fc5097e4337fca91a88a3d99359b78633dbdbf6e983f0adb34b7cdd261b7ec7266deb20c3233bf3dfdb498b3e1098e8750b9
@@ -14714,13 +14723,6 @@ __metadata:
   version: 1.7.0
   resolution: "pg-protocol@npm:1.7.0"
   checksum: 10c0/c4af854d9b843c808231c0040fed89f2b9101006157df8da2bb2f62a7dde702de748d852228dc22df41cc7ffddfb526af3bcb34b278b581e9f76a060789186c1
-  languageName: node
-  linkType: hard
-
-"pg-protocol@npm:^1.7.1":
-  version: 1.7.1
-  resolution: "pg-protocol@npm:1.7.1"
-  checksum: 10c0/3168d407ddc4c0fa2403eb9b49205399d4bc53dadbafdfcc5d25fa61b860a31c25df25704cf14c8140c80f0a41061d586e5fd5ce9bf800dfb91e9ce810bc2c37
   languageName: node
   linkType: hard
 
