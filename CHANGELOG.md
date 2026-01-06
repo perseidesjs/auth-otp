@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 3.0.1
+
+### Patch Changes
+
+- 78d71d4: Remove assets from package
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
   "name": "@perseidesjs/auth-otp",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "An OTP Auth Provider for Medusa 2.x",
   "author": "adevinwild (https://perseides.org)",
   "types": "./.medusa/server/src/types/index.d.ts",
