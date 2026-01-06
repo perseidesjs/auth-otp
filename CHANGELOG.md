@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 4.0.0
+
+### Major Changes
+
+- 7860241: V3 : Upgraded to latest Medusa dependencies and allowed jwtOptions to be passed to the /verify API route
+
 ## 2.1.2
 
 ### Patch Changes
