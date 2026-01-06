@@ -20,8 +20,6 @@ export const POST = async (
   const pluginOptions = getPluginOptions(configModule)
 
   try {
-
-
     const { result } = await verifyOtpWorkflow(req.scope).run({
       input: {
         identifier,
@@ -35,7 +33,8 @@ export const POST = async (
       const { http } = configModule.projectConfig
       const token = generateJwtTokenForAuthIdentity({ authIdentity: result.authIdentity!, actorType }, {
         secret: http.jwtSecret,
-        expiresIn: http.jwtExpiresIn
+        expiresIn: http.jwtExpiresIn,
+        options: http.jwtOptions
       })
 
       res.send({
