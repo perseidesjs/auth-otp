@@ -5,9 +5,7 @@
   "author": "adevinwild (https://perseides.org)",
   "types": "./.medusa/server/src/types/index.d.ts",
   "files": [
-    ".medusa/server",
-    ".github/assets",
-    "CHANGELOG.md"
+    ".medusa/server"
   ],
   "keywords": [
     "medusa-plugin-auth",
