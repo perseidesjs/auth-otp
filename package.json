@@ -33,6 +33,7 @@
     "build": "medusa plugin:build && npm run generate-types",
     "dev": "medusa plugin:develop",
     "prepublishOnly": "npm run build",
+    "version": "changeset version",
     "release": "yarn build && changeset publish",
     "test:integration:http": "TEST_TYPE=integration:http NODE_OPTIONS=--experimental-vm-modules jest --silent=false --runInBand --forceExit",
     "test:integration:providers": "TEST_TYPE=integration:providers NODE_OPTIONS=--experimental-vm-modules jest --silent --runInBand --forceExit",
