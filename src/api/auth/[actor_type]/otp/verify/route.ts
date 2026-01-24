@@ -31,7 +31,7 @@ export const POST = async (
 
     if (result.isValid) {
       const { http } = configModule.projectConfig
-      const token = generateJwtTokenForAuthIdentity({ authIdentity: result.authIdentity!, actorType }, {
+      const token = await generateJwtTokenForAuthIdentity({ authIdentity: result.authIdentity!, actorType }, {
         secret: http.jwtSecret,
         expiresIn: http.jwtExpiresIn,
         options: http.jwtOptions

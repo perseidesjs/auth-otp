@@ -40,10 +40,10 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8",
-    "@medusajs/cli": "2.12.4",
-    "@medusajs/framework": "2.12.4",
-    "@medusajs/medusa": "2.12.4",
-    "@medusajs/test-utils": "^2.12.4",
+    "@medusajs/cli": "2.13.0",
+    "@medusajs/framework": "2.13.0",
+    "@medusajs/medusa": "2.13.0",
+    "@medusajs/test-utils": "^2.13.0",
     "@swc/core": "1.15.8",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^29.5.14",
@@ -55,10 +55,10 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@medusajs/cli": ">2.12.4",
-    "@medusajs/framework": ">2.12.4",
-    "@medusajs/medusa": ">2.12.4",
-    "@medusajs/test-utils": ">2.12.4"
+    "@medusajs/cli": ">=2.13.0",
+    "@medusajs/framework": ">=2.13.0",
+    "@medusajs/medusa": ">=2.13.0",
+    "@medusajs/test-utils": ">=2.13.0"
   },
   "engines": {
     "node": ">=20"
