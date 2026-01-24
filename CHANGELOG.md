@@ -1,5 +1,11 @@
 # @perseidesjs/auth-otp
 
+## 3.1.0
+
+### Minor Changes
+
+- 6e8b60a: Upgrade to Medusa 2.13.0 and use @medusajs/framework/zod
+
 ## 3.0.1
 
 ### Patch Changes
