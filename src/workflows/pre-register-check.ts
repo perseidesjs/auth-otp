@@ -1,6 +1,9 @@
-import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import {
+	createWorkflow,
+	WorkflowResponse,
+} from "@medusajs/framework/workflows-sdk"
 import { emitEventStep } from "@medusajs/medusa/core-flows"
-import { Events, OtpOptions } from "../types"
+import { Events, type OtpOptions } from "../types"
 import { generateOtpStep } from "./steps/generate-otp-step"
 import { getActorStep } from "./steps/get-actor-step"
 import { preRegisterCheckActorExistenceStep } from "./steps/pre-register-check-actor-existence"
@@ -23,35 +26,37 @@ import { preRegisterCheckActorExistenceStep } from "./steps/pre-register-check-a
  *
  */
 const preRegisterCheckWorkflow = createWorkflow(
-  "pre-register-check",
-  function (input: { identifier: string, actorType: string, accessorsPerActor: Required<OtpOptions>['accessorsPerActor'][string] }) {
-    const { actor } = getActorStep({
-      identifier: input.identifier,
-      actorType: input.actorType,
-      accessorsPerActor: input.accessorsPerActor
-    })
+	"pre-register-check",
+	(input: {
+		identifier: string
+		actorType: string
+		accessorsPerActor: Required<OtpOptions>["accessorsPerActor"][string]
+	}) => {
+		const { actor } = getActorStep({
+			identifier: input.identifier,
+			actorType: input.actorType,
+			accessorsPerActor: input.accessorsPerActor,
+		})
 
-    preRegisterCheckActorExistenceStep({
-      foundActor: actor
-    })
+		preRegisterCheckActorExistenceStep({
+			foundActor: actor,
+		})
 
-    const generatedOtpResult = generateOtpStep({
-      key: input.identifier,
-      tag: 'pre-register'
-    })
+		const generatedOtpResult = generateOtpStep({
+			key: input.identifier,
+			tag: "pre-register",
+		})
 
-    emitEventStep({
-      eventName: Events.PRE_REGISTER_OTP_GENERATED,
-      data: {
-        identifier: input.identifier,
-        otp: generatedOtpResult.otp
-      }
-    })
+		emitEventStep({
+			eventName: Events.PRE_REGISTER_OTP_GENERATED,
+			data: {
+				identifier: input.identifier,
+				otp: generatedOtpResult.otp,
+			},
+		})
 
-    return new WorkflowResponse('OK')
-  }
+		return new WorkflowResponse("OK")
+	},
 )
 
 export default preRegisterCheckWorkflow
-
-

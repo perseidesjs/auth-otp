@@ -9,14 +9,12 @@ import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
  * @param input.foundActor - The found actor to check the existence for.
  */
 export const preRegisterCheckActorExistenceStep = createStep(
-  "pre-register-check-actor-existence",
-  async (input: {
-    foundActor?: Record<string, unknown>
-  }) => {
-    if (input.foundActor) {
-      throw new MedusaError(MedusaError.Types.NOT_FOUND, "Actor already exists")
-    }
+	"pre-register-check-actor-existence",
+	async (input: { foundActor?: Record<string, unknown> }) => {
+		if (input.foundActor) {
+			throw new MedusaError(MedusaError.Types.NOT_FOUND, "Actor already exists")
+		}
 
-    return new StepResponse(input)
-  }
+		return new StepResponse(input)
+	},
 )

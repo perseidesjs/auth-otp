@@ -1,9 +1,12 @@
-import { createWorkflow, WorkflowResponse } from "@medusajs/framework/workflows-sdk"
+import {
+	createWorkflow,
+	WorkflowResponse,
+} from "@medusajs/framework/workflows-sdk"
 import { emitEventStep } from "@medusajs/medusa/core-flows"
-import { Events, OtpOptions } from "../types"
-import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
+import { Events, type OtpOptions } from "../types"
 import { generateOtpStep } from "./steps/generate-otp-step"
 import { getActorStep } from "./steps/get-actor-step"
+import { getAuthIdentityStep } from "./steps/get-auth-identity-step"
 
 /**
  * Generates an OTP for a given identifier and actor type.
@@ -15,37 +18,39 @@ import { getActorStep } from "./steps/get-actor-step"
  *
  */
 const generateOtpWorkflow = createWorkflow(
-  "generate-otp",
-  function (input: { identifier: string, actorType: string, accessorsPerActor: Required<OtpOptions>['accessorsPerActor'][string] }) {
-    const { actor } = getActorStep({
-      identifier: input.identifier,
-      actorType: input.actorType,
-      accessorsPerActor: input.accessorsPerActor
-    })
+	"generate-otp",
+	(input: {
+		identifier: string
+		actorType: string
+		accessorsPerActor: Required<OtpOptions>["accessorsPerActor"][string]
+	}) => {
+		const { actor } = getActorStep({
+			identifier: input.identifier,
+			actorType: input.actorType,
+			accessorsPerActor: input.accessorsPerActor,
+		})
 
-    const { authIdentity } = getAuthIdentityStep({
-      identifier: input.identifier,
-      actorType: input.actorType,
-      accessorsPerActor: input.accessorsPerActor,
-      foundActor: actor
-    })
+		const { authIdentity } = getAuthIdentityStep({
+			identifier: input.identifier,
+			actorType: input.actorType,
+			accessorsPerActor: input.accessorsPerActor,
+			foundActor: actor,
+		})
 
-    const generatedOtpResult = generateOtpStep({
-      key: authIdentity!.id
-    })
+		const generatedOtpResult = generateOtpStep({
+			key: authIdentity?.id,
+		})
 
-    emitEventStep({
-      eventName: Events.OTP_GENERATED,
-      data: {
-        identifier: input.identifier,
-        otp: generatedOtpResult.otp
-      }
-    })
+		emitEventStep({
+			eventName: Events.OTP_GENERATED,
+			data: {
+				identifier: input.identifier,
+				otp: generatedOtpResult.otp,
+			},
+		})
 
-    return new WorkflowResponse('OK')
-  }
+		return new WorkflowResponse("OK")
+	},
 )
 
 export default generateOtpWorkflow
-
-

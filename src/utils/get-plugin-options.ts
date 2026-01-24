@@ -1,6 +1,6 @@
-import { type ConfigModule } from "@medusajs/framework";
-import { OtpOptions } from "../types";
-import OtpUtils from "./otp";
+import type { ConfigModule } from "@medusajs/framework"
+import type { OtpOptions } from "../types"
+import OtpUtils from "./otp"
 
 /**
  * Get the options for the OTP plugin
@@ -8,22 +8,29 @@ import OtpUtils from "./otp";
  * @returns The options for the OTP plugin based on the default options and the options from the plugin
  */
 export default function getPluginOptions(configModule: ConfigModule) {
-  const isPluginWithOptions = (plugin: any): plugin is { resolve: string, options: Record<string, unknown> } => {
-    return typeof plugin === 'object' && "resolve" in plugin && "options" in plugin
-  }
+	const isPluginWithOptions = (
+		plugin: any,
+	): plugin is { resolve: string; options: Record<string, unknown> } => {
+		return (
+			typeof plugin === "object" && "resolve" in plugin && "options" in plugin
+		)
+	}
 
-  const pluginOptions = configModule.plugins.filter(isPluginWithOptions).find((plugin) => plugin.resolve.includes('@perseidesjs/auth-otp'))?.options as OtpOptions | undefined
+	const pluginOptions = configModule.plugins
+		.filter(isPluginWithOptions)
+		.find((plugin) => plugin.resolve.includes("@perseidesjs/auth-otp"))
+		?.options as OtpOptions | undefined
 
-  return {
-    ...OtpUtils.DEFAULT_OPTIONS,
-    ...pluginOptions,
-    accessorsPerActor: {
-      ...OtpUtils.DEFAULT_OPTIONS.accessorsPerActor,
-      ...pluginOptions?.accessorsPerActor
-    },
-    http: {
-      ...OtpUtils.DEFAULT_OPTIONS.http,
-      ...pluginOptions?.http
-    }
-  }
+	return {
+		...OtpUtils.DEFAULT_OPTIONS,
+		...pluginOptions,
+		accessorsPerActor: {
+			...OtpUtils.DEFAULT_OPTIONS.accessorsPerActor,
+			...pluginOptions?.accessorsPerActor,
+		},
+		http: {
+			...OtpUtils.DEFAULT_OPTIONS.http,
+			...pluginOptions?.http,
+		},
+	}
 }

@@ -1,6 +1,6 @@
-import { ContainerRegistrationKeys, MedusaError } from "@medusajs/framework/utils"
+import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
 import { createStep, StepResponse } from "@medusajs/framework/workflows-sdk"
-import { OtpOptions } from "../../types"
+import type { OtpOptions } from "../../types"
 
 /**
  * Gets an actor for a given identifier and actor type.
@@ -11,38 +11,43 @@ import { OtpOptions } from "../../types"
  * @param input.accessorsPerActor - The accessors per actor to use for the step.
  */
 export const getActorStep = createStep(
-  "get-actor",
-  async (input: {
-    identifier: string
-    actorType: string
-    accessorsPerActor: Required<OtpOptions>['accessorsPerActor'][string]
-  }, { container }) => {
-    const remoteQuery = container.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
+	"get-actor",
+	async (
+		input: {
+			identifier: string
+			actorType: string
+			accessorsPerActor: Required<OtpOptions>["accessorsPerActor"][string]
+		},
+		{ container },
+	) => {
+		const remoteQuery = container.resolve(
+			ContainerRegistrationKeys.REMOTE_QUERY,
+		)
 
-    const filters: Record<string, unknown> = {}
-    if (Array.isArray(input.accessorsPerActor.accessor)) {
-      filters['$or'] = input.accessorsPerActor.accessor.map(accessor => ({
-        [accessor]: input.identifier
-      }))
-    } else {
-      filters[input.accessorsPerActor.accessor] = input.identifier
-    }
+		const filters: Record<string, unknown> = {}
+		if (Array.isArray(input.accessorsPerActor.accessor)) {
+			filters.$or = input.accessorsPerActor.accessor.map((accessor) => ({
+				[accessor]: input.identifier,
+			}))
+		} else {
+			filters[input.accessorsPerActor.accessor] = input.identifier
+		}
 
-    const actor = await remoteQuery.graph({
-      entity: input.actorType,
-      fields: ['*'],
-      filters
-    })
+		const actor = await remoteQuery.graph({
+			entity: input.actorType,
+			fields: ["*"],
+			filters,
+		})
 
-    const foundActor = actor.data.length ? actor.data[0] : null
+		const foundActor = actor.data.length ? actor.data[0] : null
 
-    if (!foundActor) {
-      return new StepResponse({
-        error: true,
-        actor: null
-      })
-    }
+		if (!foundActor) {
+			return new StepResponse({
+				error: true,
+				actor: null,
+			})
+		}
 
-    return new StepResponse({ actor: foundActor, error: false })
-  }
+		return new StepResponse({ actor: foundActor, error: false })
+	},
 )
