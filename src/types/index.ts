@@ -38,6 +38,12 @@
  *
  *   Default is: { customer: { accessor: 'email', entityIdAccessor: 'id' }, user: { accessor: 'email', entityIdAccessor: 'id' } }
  */
+import type { EventPriority } from "@medusajs/framework/utils"
+
+export type EventOptions = {
+	priority?: (typeof EventPriority)[keyof typeof EventPriority]
+}
+
 export type OtpOptions = {
 	/** The number of digits the OTP should have. @default 6 */
 	digits: number
@@ -82,6 +88,18 @@ export type OtpOptions = {
 			 */
 			entityIdAccessor: string
 		}
+	}
+
+	/**
+	 * Configure event priorities per event name.
+	 * @example
+	 * events: {
+	 *   [Events.OTP_GENERATED]: { priority: EventPriority.CRITICAL },
+	 *   [Events.PRE_REGISTER_OTP_GENERATED]: { priority: EventPriority.HIGH }
+	 * }
+	 */
+	events?: {
+		[eventName: string]: EventOptions
 	}
 
 	http?: {

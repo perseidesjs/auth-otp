@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils"
+import { Events } from "../../../../../types"
 import getPluginOptions from "../../../../../utils/get-plugin-options"
 import preRegisterCheckWorkflow from "../../../../../workflows/pre-register-check"
 import type { PostAuthActorTypeOtpPreRegisterSchema } from "./validators"
@@ -19,6 +20,7 @@ export const POST = async (
 	const pluginOptions = getPluginOptions(configModule)
 
 	const accessorsPerActor = pluginOptions.accessorsPerActor?.[actorType]
+	const eventOptions = pluginOptions.events?.[Events.PRE_REGISTER_OTP_GENERATED]
 
 	await preRegisterCheckWorkflow(req.scope)
 		.run({
@@ -26,6 +28,7 @@ export const POST = async (
 				identifier,
 				actorType,
 				accessorsPerActor,
+				eventOptions,
 			},
 		})
 		.catch((error) => {

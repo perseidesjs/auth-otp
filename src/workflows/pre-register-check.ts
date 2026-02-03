@@ -1,9 +1,10 @@
 import {
 	createWorkflow,
+	transform,
 	WorkflowResponse,
 } from "@medusajs/framework/workflows-sdk"
 import { emitEventStep } from "@medusajs/medusa/core-flows"
-import { Events, type OtpOptions } from "../types"
+import { Events, type EventOptions, type OtpOptions } from "../types"
 import { generateOtpStep } from "./steps/generate-otp-step"
 import { getActorStep } from "./steps/get-actor-step"
 import { preRegisterCheckActorExistenceStep } from "./steps/pre-register-check-actor-existence"
@@ -23,15 +24,17 @@ import { preRegisterCheckActorExistenceStep } from "./steps/pre-register-check-a
  * @param input.identifier - The identifier of the actor to check the existence for.
  * @param input.actorType - The type of actor to check the existence for.
  * @param input.accessorsPerActor - The accessors per actor to use for the workflow.
+ * @param input.eventOptions - The event options for PRE_REGISTER_OTP_GENERATED event.
  *
  */
 const preRegisterCheckWorkflow = createWorkflow(
 	"pre-register-check",
-	(input: {
+	function (input: {
 		identifier: string
 		actorType: string
 		accessorsPerActor: Required<OtpOptions>["accessorsPerActor"][string]
-	}) => {
+		eventOptions?: EventOptions
+	}) {
 		const { actor } = getActorStep({
 			identifier: input.identifier,
 			actorType: input.actorType,
@@ -47,13 +50,19 @@ const preRegisterCheckWorkflow = createWorkflow(
 			tag: "pre-register",
 		})
 
-		emitEventStep({
-			eventName: Events.PRE_REGISTER_OTP_GENERATED,
-			data: {
-				identifier: input.identifier,
-				otp: generatedOtpResult.otp,
-			},
-		})
+		const emitEventInput = transform(
+			{ identifier: input.identifier, otp: generatedOtpResult.otp, eventOptions: input.eventOptions },
+			(data) => ({
+				eventName: Events.PRE_REGISTER_OTP_GENERATED,
+				data: {
+					identifier: data.identifier,
+					otp: data.otp,
+				},
+				options: data.eventOptions?.priority ? { priority: data.eventOptions.priority } : undefined,
+			}),
+		)
+
+		emitEventStep(emitEventInput)
 
 		return new WorkflowResponse("OK")
 	},

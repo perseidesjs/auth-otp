@@ -28,6 +28,10 @@ export default function getPluginOptions(configModule: ConfigModule) {
 			...OtpUtils.DEFAULT_OPTIONS.accessorsPerActor,
 			...pluginOptions?.accessorsPerActor,
 		},
+		events: {
+			...OtpUtils.DEFAULT_OPTIONS.events,
+			...pluginOptions?.events,
+		},
 		http: {
 			...OtpUtils.DEFAULT_OPTIONS.http,
 			...pluginOptions?.http,
