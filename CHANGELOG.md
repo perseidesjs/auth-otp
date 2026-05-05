@@ -1,5 +1,24 @@
 # @perseidesjs/auth-otp
 
+## 3.3.0
+
+### Minor Changes
+
+- 7994c7a: fix(C2): OTP is now invalidated after successful verify — prevents replay attacks
+
+  BREAKING: validateOtpStep now throws on invalid OTP instead of returning { isValid: false }.
+  verifyOtpWorkflow response no longer includes the isValid field.
+
+### Patch Changes
+
+- 85e52b3: fix(C1): guard undefined entityId in getAuthIdentityStep to prevent MikroORM full-table scan
+- 295744c: fix(H2): normalize identifier to lowercase in validators and authenticate() to prevent case-mismatch
+- af0dac6: fix(M3): replace HMAC-SHA1 OTP generation with crypto.randomInt — removes deprecated SHA-1 dependency
+- 84ca874: fix(H4): use timingSafeEqual for OTP comparison in validateOtpStep and authenticate()
+- 1ad9d65: fix(H1): invalidate pre-register OTP after successful register to prevent reuse
+- 95851b0: fix(C3): correct recently_registered cache invalidation key to include OTP suffix — bypass now properly consumed on first use
+- c8d9dbd: fix(H3): return 400 for unconfigured actor types instead of crashing at runtime
+
 ## 3.2.0
 
 ### Minor Changes
